@@ -1,4 +1,17 @@
 $(function(){
+    // shim layer with setTimeout fallback
+    window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+
+    var controls = {};
     var counters = {};
     var gauges = {};
     var reactor = new Reactor(window.location.pathname);
@@ -13,6 +26,9 @@ $(function(){
     });
 
     var updateControl = function(name, value, counters) {
+        if (! controls[name]) {
+            controls[name] = new Control.counter();
+        }
         if (! counters[name]) {
             counters[name] = new JustGage({
                 id: "g1",
@@ -24,5 +40,15 @@ $(function(){
             });
         }
         counters[name].refresh(value);
+        controls[name].refresh(value);
     }
+
+    function draw() {
+        requestAnimFrame(draw);
+        // Drawing code goes here
+        Object.keys(controls).forEach(function(name) {
+            controls[name].frame();
+        });
+    }
+    draw();
 });
