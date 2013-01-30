@@ -1,6 +1,6 @@
 function Reactor(pathname) {
     this.socket = io.connect(
-        'http://'+window.location.hostname+':2000/'
+        'http://'+window.location.hostname+':20000/'
         //"http://localhost:2000/"
     );
     this.config = {};
