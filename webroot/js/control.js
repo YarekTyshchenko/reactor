@@ -16,6 +16,7 @@ Control.counter = Counter;
 function Counter() {
     this.speed = 0;
     this.value = null;
+    this.degrees = 0;
     this.scale = 5.0;
 
     // Creates canvas 320 × 200 at 10, 50
@@ -48,5 +49,6 @@ Counter.prototype.refresh = function(value) {
 };
 Counter.prototype.frame = function() {
     // Advance the turn by this.speed
-    this.line.rotate(this.speed/this.scale);
+    this.degrees += this.speed/this.scale;
+    this.line.transform('r'+this.degrees%360);
 }
