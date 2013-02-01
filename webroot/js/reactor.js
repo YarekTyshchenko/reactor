@@ -10,8 +10,8 @@ var reactor = {
     },
     init: function(pathname) {
         this.socket = io.connect(
-            //'http://'+window.location.hostname+':20000/'
-            "http://localhost:20000/"
+            'http://'+window.location.hostname+':20000/'
+            //"http://localhost:20000/"
         );
         //this.settings.pathname = pathname;
         this.socket.on('connect', function () {});
