@@ -68,5 +68,5 @@ Optional Variables:
     //port: 8125,
     backends: ["../backends/reactor"],
     flushInterval: 1000,
-    dumpMessages:true
+    //dumpMessages:true
 }

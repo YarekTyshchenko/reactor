@@ -1,6 +1,10 @@
 var util = require('util');
 var io = require('socket.io').listen(20000);
-var config = {};
+var settings = {
+    config: {
+        controls: []
+    }
+};
 
 function ReactorBackend(startupTime, config, emitter){
     var self = this;
@@ -10,11 +14,22 @@ function ReactorBackend(startupTime, config, emitter){
 
     io.set('log level', 2);
     io.sockets.on('connection', function(socket){
-        if (! config[socket.id]) {
-            config[socket.id] = {};
-        }
-        socket.emit('config', config[socket.id]);
+        console.log(settings);
+        socket.emit('updateConfig', settings);
+
+        socket.on('setConfig', function(data) {
+            // Check incoming config
+            console.log(data);
+            // Save new config
+            //if (! settings) {
+                settings = data;
+            //}
+            
+            socket.broadcast.emit('updateConfig', settings);
+        });
     });
+
+    // Handle disconnect
 
     this.statsCache = {
         counters: {},
@@ -28,7 +43,7 @@ function ReactorBackend(startupTime, config, emitter){
 
 ReactorBackend.prototype.flush = function(timestamp, metrics) {
     var self = this;
-    var statlist = {gauges:[], counters:[]};
+    var statlist = {};
 
     // merge with previously sent values
     Object.keys(self.statsCache).forEach(function(type) {
@@ -37,12 +52,12 @@ ReactorBackend.prototype.flush = function(timestamp, metrics) {
             var value = metrics[type][name];
             self.statsCache[type][name] || (self.statsCache[type][name] = 0);
             self.statsCache[type][name] += value;
-            statlist.counters.push(name);
+            statlist[name] = {name: name, type:'counter', value: value};
         });
     });
 
     Object.keys(metrics.gauges).forEach(function(name) {
-        statlist.gauges.push(name);
+        statlist[name] = {name: name, type:'gauge', value: metrics.gauges[name]};
     });
 
     var out = {
