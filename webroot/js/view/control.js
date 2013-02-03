@@ -4,8 +4,8 @@ Reactor.View.Control = Backbone.View.extend({
     events: {
         'click':'highlight'
     },
-    width: 70,
-    height: 70,
+    width: 130,
+    height: 130,
     initialize: function(options) {
         this.model = options.model;
         this.control = options.control || new Reactor.Model.Control();
@@ -20,9 +20,12 @@ Reactor.View.Control = Backbone.View.extend({
         this.refresh();
     },
     refresh: function() {
-
+        this.value = this.model.get('value');
     },
     frame: function() {
+
+    },
+    reset: function() {
 
     },
     highlight: function() {

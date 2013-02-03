@@ -1,7 +1,8 @@
 var reactor = {
     availableViews: {
         'Flow Rate Meter': Reactor.View.Counter,
-        'Digital Display': Reactor.View.Display
+        'Digital Display': Reactor.View.Display,
+        'Gauge': Reactor.View.Gauge
     },
     settings: {
         config: {

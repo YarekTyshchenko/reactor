@@ -35,6 +35,7 @@ Reactor.View.AddControl = Backbone.View.extend({
                 this.controlViews[key] = (view);
             } else {
                 this.controlViews[key].setModel(this.stats.get(statname));
+                this.controlViews[key].reset();
             }
         }, this);
     },
