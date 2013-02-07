@@ -1,4 +1,4 @@
-Reactor.View.AddControl = Backbone.View.extend({
+Reactor.View.AddControlModal = Backbone.View.extend({
     id: 'addControlModal',
     className: 'modal hide fade',
     attributes: {
@@ -82,7 +82,7 @@ Reactor.View.Navigation = Backbone.View.extend({
         });
     },
     render: function() {
-        var modal = new Reactor.View.AddControl();
+        var modal = new Reactor.View.AddControlModal();
         modal.on('addControl', _.bind(function(){
             this.trigger('addControl')
         }, this));
