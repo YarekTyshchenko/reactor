@@ -37,8 +37,6 @@ Reactor.View.Gauge = Reactor.View.Control.extend({
 		if (this.value > this.max) {
 			this.max = this.value;
 		}
-	},
-	frame: function() {
 		//this.value = 50;
 		// -50 to 50
 		// 0 to 1000
