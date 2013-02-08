@@ -1,11 +1,12 @@
 var util = require('util');
 var io = require('socket.io').listen(20000);
-var settings = {
-    config: {
-        controls: []
-    }
-};
+var fs = require('fs');
 
+var settingsFilename = './config/settings.json';
+var settings = {config: {controls: []}};
+if (fs.existsSync(settingsFilename)) {
+    settings = JSON.parse(fs.readFileSync(settingsFilename, 'utf8'));
+}
 function ReactorBackend(startupTime, config, emitter){
     var self = this;
     this.lastFlush = startupTime;
@@ -23,6 +24,8 @@ function ReactorBackend(startupTime, config, emitter){
             // Save new config
             //if (! settings) {
                 settings = data;
+
+                fs.writeFileSync(settingsFilename, JSON.stringify(settings, null, 4));
             //}
             
             socket.broadcast.emit('updateConfig', settings);
