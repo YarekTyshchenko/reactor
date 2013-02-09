@@ -51,11 +51,17 @@ ReactorBackend.prototype.flush = function(timestamp, metrics) {
     // merge with previously sent values
     Object.keys(self.statsCache).forEach(function(type) {
         if(!metrics[type]) return;
+        var typeName;
+        if (type === 'counters') {
+            typeName = 'counter';
+        } else if (type === 'timers') {
+            typeName = 'timer';
+        }
         Object.keys(metrics[type]).forEach(function(name) {
             var value = metrics[type][name];
             self.statsCache[type][name] || (self.statsCache[type][name] = 0);
             self.statsCache[type][name] += value;
-            statlist[name] = {name: name, type:'counter', value: value};
+            statlist[name] = {name: name, type:typeName, value: value};
         });
     });
 

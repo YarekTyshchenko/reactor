@@ -74,7 +74,9 @@ Reactor.View.Navigation = Backbone.View.extend({
     events: {
         'click #addControl': 'addControl'
     },
-    addControl: function() {
+    addControl: function(event) {
+        event.preventDefault();
+
         this.$el.find('#addControlModal').modal({
             backdrop: false
         }).on('shown', function() {

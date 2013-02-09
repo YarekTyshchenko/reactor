@@ -51,9 +51,6 @@ var reactor = {
         this.socket.emit('setConfig', this.settings);
     },
     updateConfig: function(settings) {
-        if (! settings) {
-            return;
-        }
         var controls = settings.config.controls;
         _.forEach(controls, function(controlSettings){
             if (! this.stats.get(controlSettings.statName)) {
@@ -69,5 +66,6 @@ var reactor = {
             }
 
         }, this);
+        this.settings = settings;
     }
 };
