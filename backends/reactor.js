@@ -69,23 +69,14 @@ ReactorBackend.prototype.flush = function(timestamp, metrics) {
         statlist[name] = {name: name, type:'gauge', value: metrics.gauges[name]};
     });
 
-    var out = {
-        counters: this.statsCache.counters,
-        timers: this.statsCache.timers,
-        gauges: metrics.gauges,
-        timer_data: metrics.timer_data,
-        counter_rates: metrics.counter_rates,
-        sets: function (vals) {
-            var ret = {};
-            for (val in vals) {
-                ret[val] = vals[val].values();
-            }
-            return ret;
-        }(metrics.sets),
-        pctThreshold: metrics.pctThreshold,
-        list: statlist
-    };
-    io.sockets.emit('out', out);
+    // Only send stats that we have controls for
+    var out = {};
+    settings.config.controls.forEach(function(control) {
+        if (! out[control.statName]) {
+            out[control.statName] = statlist[control.statName];
+        }
+    });
+    io.sockets.emit('out', {list:out});
 };
 
 ReactorBackend.prototype.status = function(write) {
