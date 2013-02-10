@@ -25,6 +25,9 @@ Reactor.View.Display = Reactor.View.Control.extend({
     },
     frame: function() {
         // Move me to refresh
+        if (! this.value) {
+            this.value = '';
+        }
         var value = this.value.toString();
         while (value.length < this.display.pattern.length) {
             value = ' '+value;

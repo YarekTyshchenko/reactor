@@ -1,5 +1,5 @@
 Reactor.View.Control = Backbone.View.extend({
-    value: 0,
+    value: null,
     className: 'control',
     events: {
         'click':'highlight'

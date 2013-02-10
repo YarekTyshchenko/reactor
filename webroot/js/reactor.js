@@ -67,5 +67,10 @@ var reactor = {
 
         }, this);
         this.settings = settings;
+    },
+    getStatsList: function(callback) {
+        this.socket.emit('getStatsList', function (list) {
+          callback(list);
+        });
     }
 };

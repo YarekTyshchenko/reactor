@@ -7,6 +7,8 @@ var settings = {config: {controls: []}};
 if (fs.existsSync(settingsFilename)) {
     settings = JSON.parse(fs.readFileSync(settingsFilename, 'utf8'));
 }
+
+var statlist = {};
 function ReactorBackend(startupTime, config, emitter){
     var self = this;
     this.lastFlush = startupTime;
@@ -30,6 +32,10 @@ function ReactorBackend(startupTime, config, emitter){
             
             socket.broadcast.emit('updateConfig', settings);
         });
+
+        socket.on('getStatsList', function (callback) {
+            callback(statlist);
+        });
     });
 
     // Handle disconnect
@@ -46,8 +52,6 @@ function ReactorBackend(startupTime, config, emitter){
 
 ReactorBackend.prototype.flush = function(timestamp, metrics) {
     var self = this;
-    var statlist = {};
-
     // merge with previously sent values
     Object.keys(self.statsCache).forEach(function(type) {
         if(!metrics[type]) return;

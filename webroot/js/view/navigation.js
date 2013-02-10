@@ -12,29 +12,43 @@ Reactor.View.AddControlModal = Backbone.View.extend({
     },
     controlViews: {},
     runAnimation: true,
+    statsList: {},
     initialize: function(options) {
         this.stats = reactor.stats;
+        reactor.getStatsList(_.bind(function(list) {
+            this.statsList = list;
+            // rerender dropdown
+            this.render();
+        }, this));
         // What about remove
         this.stats.bind('add', this.render, this);
         this.animate();
     },
     render: function() {
-        this.$el.html(this.template({stats:this.stats.toJSON()}));
+        this.$el.html(this.template({stats:this.statsList}));
         return this;
     },
     selectStat: function(e) {
         var statname = $(e.target).val();
         var controlsDiv = this.$el.find('#controls');
         _.forEach(reactor.availableViews, function(View, key) {
+            var model = this.stats.get(statname);
+            if (! model) {
+                model = new Reactor.Model.Stat({
+                    name: statname
+                });
+                // Add it to collection? why?
+                // this.stats.add(model);
+            }
             if (! this.controlViews[key]) {
                 var view = new View({
-                    model: this.stats.get(statname)
+                    model: model
                 });
                 view.on('highlight', this.selectControl, this);
                 controlsDiv.append(view.render().el);
                 this.controlViews[key] = (view);
             } else {
-                this.controlViews[key].setModel(this.stats.get(statname));
+                this.controlViews[key].setModel(model);
                 this.controlViews[key].reset();
             }
         }, this);
@@ -80,7 +94,7 @@ Reactor.View.Navigation = Backbone.View.extend({
         this.$el.find('#addControlModal').modal({
             backdrop: false
         }).on('shown', function() {
-            $(this).find('#statsList').trigger('change');
+            //$(this).find('#statsList').trigger('change');
         });
     },
     render: function() {
