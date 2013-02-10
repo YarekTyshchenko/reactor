@@ -8,7 +8,8 @@ Reactor.View.AddControlModal = Backbone.View.extend({
     template: _.template($('#addControlModalTemplate').html()),
     events: {
         'change #statsList': 'selectStat',
-        'click #addControlButton': 'addControl'
+        'click #addControlButton': 'addControl',
+        'click #closeModal': 'closeModal'
     },
     controlViews: {},
     runAnimation: true,
@@ -35,7 +36,8 @@ Reactor.View.AddControlModal = Backbone.View.extend({
             var model = this.stats.get(statname);
             if (! model) {
                 model = new Reactor.Model.Stat({
-                    name: statname
+                    name: statname,
+                    value: this.statsList[statname].value
                 });
                 // Add it to collection? why?
                 // this.stats.add(model);
@@ -81,12 +83,23 @@ Reactor.View.AddControlModal = Backbone.View.extend({
             });
         }, this);
         draw();
+    },
+    closeModal: function() {
+        this.runAnimation = false;
+        _.forEach(this.controlViews, function(view) {
+            view.remove();
+        }, this);
+        this.controlViews = {};
     }
 });
 
 Reactor.View.Navigation = Backbone.View.extend({
     events: {
         'click #addControl': 'addControl'
+    },
+    modal: {},
+    initialize: function(options) {
+        this.modal = new Reactor.View.AddControlModal();
     },
     addControl: function(event) {
         event.preventDefault();
@@ -95,14 +108,14 @@ Reactor.View.Navigation = Backbone.View.extend({
             backdrop: false
         }).on('shown', function() {
             //$(this).find('#statsList').trigger('change');
+            this.modal.animate();
         });
     },
     render: function() {
-        var modal = new Reactor.View.AddControlModal();
-        modal.on('addControl', _.bind(function(){
+        this.modal.on('addControl', _.bind(function(){
             this.trigger('addControl')
         }, this));
-        this.$el.append(modal.render().el);
+        this.$el.append(this.modal.render().el);
         return this;
     }
 });
