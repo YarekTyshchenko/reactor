@@ -106,10 +106,10 @@ Reactor.View.Navigation = Backbone.View.extend({
 
         this.$el.find('#addControlModal').modal({
             backdrop: false
-        }).on('shown', function() {
+        }).on('shown', _.bind(function() {
             //$(this).find('#statsList').trigger('change');
             this.modal.animate();
-        });
+        }, this));
     },
     render: function() {
         this.modal.on('addControl', _.bind(function(){
