@@ -5,12 +5,12 @@ Reactor.View.Display = Reactor.View.Control.extend({
     render: function() {
         this.$el.append('<canvas id="'+this.id+'-canvas">');
         var display = new SegmentDisplay(this.id+'-canvas');
-        display.pattern         = "#########";
+        display.pattern         = "######";
         display.cornerType      = 2;
         display.displayType     = 7;
         display.displayAngle    = 9;
-        display.digitHeight     = 20;
-        display.digitWidth      = 12;
+        display.digitHeight     = 15;
+        display.digitWidth      = 10;
         display.digitDistance   = 2;
         display.segmentWidth    = 3;
         display.segmentDistance = 0.5;

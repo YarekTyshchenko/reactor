@@ -7,9 +7,9 @@ Reactor.View.AddControlModal = Backbone.View.extend({
     },
     template: _.template($('#addControlModalTemplate').html()),
     events: {
-        'change #statsList': 'selectStat',
+        'change .statsList': 'drillDownStat',
         'click #addControlButton': 'addControl',
-        'click #closeModal': 'closeModal'
+        //'click #closeModal': 'closeModal'
     },
     controlViews: {},
     runAnimation: true,
@@ -26,18 +26,72 @@ Reactor.View.AddControlModal = Backbone.View.extend({
         this.animate();
     },
     render: function() {
-        this.$el.html(this.template({stats:this.statsList}));
+        this.$el.html(this.template());
+        var list = this.$el.find('.statsList');
+        _.forEach(this.statsList, function (stat, key) {
+            list.append($('<option>', { 
+                value: key,
+                text : key,
+            }).data('stat', stat));
+        });
         return this;
     },
-    selectStat: function(e) {
-        var statname = $(e.target).val();
+    drillDownStat: function(e) {
+        var select = $(e.target);
+        var stat = $('option:selected', e.target).data('stat');
+        console.log(stat);
+        if (stat.name) {
+            this.selectStat(stat);
+            return;
+        }
+
+        // Create another select option from stat
+        var list = select.data('next');
+        if (!list) {
+            list = $('<select>', {
+                class: 'statsList'
+            });
+            this.$el.find('.modal-body').append(list);
+            select.data('next', list);
+        } else {
+            var next = function(list) {
+                if (list) {
+                    next(list.data('next'));
+                    list.remove();
+                }
+            }
+            next(list.data('next'));
+            list.html('');
+        }
+
+        var unwind = function(stat, keys) {
+            console.log(stat);
+            if (_.size(stat) == 1 && !stat.type) {
+                var key = Object.keys(stat)[0];
+                keys.push(key);
+                return unwind(stat[key], keys);
+            }
+            return stat;
+        };
+        var keys = [];
+        stat = unwind(stat, keys);
+        list.data('keys', keys);
+        _.forEach(stat, function(stat, key) {
+            list.append($('<option>', {
+                value: key,
+                text : keys.concat(key).join('.'),
+            }).data('stat', stat));
+        });
+    },
+    selectStat: function(stat) {
+        console.log(stat);
         var controlsDiv = this.$el.find('#controls');
         _.forEach(reactor.availableViews, function(View, key) {
-            var model = this.stats.get(statname);
+            var model = this.stats.get(stat.name);
             if (! model) {
                 model = new Reactor.Model.Stat({
-                    name: statname,
-                    value: this.statsList[statname].value
+                    name: stat.name,
+                    value: stat.value
                 });
                 // Add it to collection? why?
                 // this.stats.add(model);
@@ -108,7 +162,7 @@ Reactor.View.Navigation = Backbone.View.extend({
             backdrop: false
         }).on('shown', function() {
             //$(this).find('#statsList').trigger('change');
-            this.modal.animate();
+            //this.modal.animate();
         });
     },
     render: function() {
@@ -116,6 +170,7 @@ Reactor.View.Navigation = Backbone.View.extend({
             this.trigger('addControl')
         }, this));
         this.$el.append(this.modal.render().el);
+        this.modal.animate();
         return this;
     }
 });

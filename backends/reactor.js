@@ -1,6 +1,7 @@
 var util = require('util');
 var io = require('socket.io').listen(20000);
 var fs = require('fs');
+var _ = require('underscore');
 
 var settingsFilename = './config/settings.json';
 var settings = {config: {controls: []}};
@@ -34,7 +35,26 @@ function ReactorBackend(startupTime, config, emitter){
         });
 
         socket.on('getStatsList', function (callback) {
-            callback(statlist);
+            var finallist = {};
+            var recurse = function(bits, stat, list) {
+                if (! list) {
+                    list = finallist;
+                }
+                var bit = bits.shift();
+                if (bits.length > 0) {
+                    if (! list[bit]) {
+                        list[bit] = {};
+                    }
+                    recurse(bits, stat, list[bit]);
+                    return;
+                }
+                list[bit] = stat;
+            };
+            _.forEach(statlist, function(stat, key) {
+                var bits = key.split('.');
+                recurse(bits, stat, finallist);
+            });
+            callback(finallist);
         });
     });
 
