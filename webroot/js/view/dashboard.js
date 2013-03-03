@@ -18,8 +18,8 @@ Reactor.View.Dashboard = Backbone.View.extend({
     },
     addControl: function(control) {
         var name = control.get('statName');
-        var view = control.getView();
-        this.controlViews[control.cid] = new view({
+        var View = control.getView();
+        this.controlViews[control.cid] = new View({
             model: this.stats.get(name),
             control: control,
             id: name

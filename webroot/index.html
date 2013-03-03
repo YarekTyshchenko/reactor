@@ -15,9 +15,6 @@
     <![endif]-->
     <script type="text/javascript" src="js/lib/segment-display.js"></script>
     <style>
-        #addControlModal .highlighted {
-            border: 1px solid blue;
-        }
         .control {
             float: left;
         }
@@ -43,21 +40,81 @@
     <div id='content'>
         <div id='dashboard'></div>
 
+        <!-- ControlContainer -->
+        <script type='text/template' id='controlContainerTemplate'>
+            <style>
+                .modal-body {
+                    padding: 0;
+                }
+                .controlContainer {
+                    width:100%;
+
+                    /* Firefox */
+                    display:-moz-box;
+                    -moz-box-pack:center;
+                    -moz-box-align:center;
+
+                    /* Safari and Chrome */
+                    display:-webkit-box;
+                    -webkit-box-pack:center;
+                    -webkit-box-align:center;
+
+                    /* W3C */
+                    display:box;
+                    box-pack:center;
+                    box-align:center;
+
+                    padding-top: 20px;
+                    padding-bottom: 20px;
+
+                    background: #d5dbe1;
+                    border-bottom: 2px solid #ccc;
+                }
+                .controlContainer .control {
+                    width: 50%;
+                }
+                .controlContainer.highlighted {
+                    background: #006DCC;
+                }
+            </style>
+            <%= $(view).html() %>
+        </script>
         <!-- Modal -->
         <script type='text/template' id='addControlModalTemplate'>
+            <style>
+                #controlList {
+                    width: 250px;
+                    height: 300px;
+                    float: left;
+                    overflow-y: scroll;
+                }
+                #controlOptions {
+                    padding-left: 10px;
+                    width: 250px;
+                    float: left;
+                }
+                h2 {
+                    font-size: 20pt;
+                    margin: 0;
+                }
+                h3 {
+                    font-size: 15pt;
+                    margin: 0;
+                }
+            </style>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="myModalLabel">Modal header</h3>
             </div>
             <div class="modal-body">
-                <select id='statsList'>
-                    <% _.each(stats, function(stat){ %>
-                    <option value="<%= stat.name %>"><%= stat.name %></option>
-                    <% }); %>
-                </select>
-            </div>
-            <div id='controls' style=''>
-                Controls
+                <div id='controlList'>
+                </div>
+                <div id='controlOptions'>
+                    <h2 class='name'></h3>
+                    <p class='description'></p>
+                    <h3>Data bindings</h3>
+                    <div class='dataBindings'></div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button id='closeModal' class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

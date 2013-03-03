@@ -1,13 +1,10 @@
 Reactor.View.Control = Backbone.View.extend({
     value: null,
     className: 'control',
-    events: {
-        'click':'highlight'
-    },
     width: 130,
     height: 130,
     initialize: function(options) {
-        this.model = options.model;
+        this.model = options.model || new Reactor.Model.Stat();
         this.control = options.control || new Reactor.Model.Control();
         this.control.bind('change', this.updatePosition, this);
         this.model.bind('change', this.refresh, this);
@@ -27,13 +24,6 @@ Reactor.View.Control = Backbone.View.extend({
     },
     reset: function() {
 
-    },
-    highlight: function() {
-        this.$el.addClass('highlighted');
-        this.trigger('highlight', this);
-    },
-    unhighlight: function() {
-        this.$el.removeClass('highlighted');
     },
     draggableStop: function(event, ui) {
         this.control.set('position', {

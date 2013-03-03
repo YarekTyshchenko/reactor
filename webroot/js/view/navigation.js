@@ -1,3 +1,30 @@
+Reactor.View.ControlContainer = Backbone.View.extend({
+    template: _.template($('#controlContainerTemplate').html()),
+    className: 'controlContainer',
+    events: {
+        'click':'highlight'
+    },
+    view: null,
+    onSelect: function() {},
+    initialize: function(options) {
+        this.view = options.view;
+        this.onSelect = options.onSelect;
+    },
+    getView: function() {
+        return this.view;
+    },
+    render: function() {
+        this.$el.html(this.template({view:this.view.render().el}));
+        return this;
+    },
+    highlight: function() {
+        this.onSelect(this);
+        this.$el.addClass('highlighted');
+    },
+    unhighlight: function() {
+        this.$el.removeClass('highlighted');
+    }
+});
 Reactor.View.AddControlModal = Backbone.View.extend({
     id: 'addControlModal',
     className: 'modal hide fade',
@@ -7,7 +34,6 @@ Reactor.View.AddControlModal = Backbone.View.extend({
     },
     template: _.template($('#addControlModalTemplate').html()),
     events: {
-        'change #statsList': 'selectStat',
         'click #addControlButton': 'addControl',
         'click #closeModal': 'closeModal'
     },
@@ -16,57 +42,41 @@ Reactor.View.AddControlModal = Backbone.View.extend({
     statsList: {},
     initialize: function(options) {
         this.stats = reactor.stats;
-        reactor.getStatsList(_.bind(function(list) {
-            this.statsList = list;
-            // rerender dropdown
-            this.render();
-        }, this));
         // What about remove
         this.stats.bind('add', this.render, this);
-        this.animate();
     },
     render: function() {
         this.$el.html(this.template({stats:this.statsList}));
+        var controlsDiv = this.$el.find('#controlList').html('');
+        _.forEach(reactor.availableViews, function(View, key) {
+            var view = new View({});
+            var controlContainer = new Reactor.View.ControlContainer({
+                view: view,
+                onSelect: _.bind(function(container) {
+                    this.selectControl(container);
+                }, this)
+            });
+            controlsDiv.append(controlContainer.render().el);
+            this.controlViews[key] = (controlContainer);
+        }, this);
+
         return this;
     },
     selectStat: function(e) {
         var statname = $(e.target).val();
-        var controlsDiv = this.$el.find('#controls');
-        _.forEach(reactor.availableViews, function(View, key) {
-            var model = this.stats.get(statname);
-            if (! model) {
-                model = new Reactor.Model.Stat({
-                    name: statname,
-                    value: this.statsList[statname].value
-                });
-                // Add it to collection? why?
-                // this.stats.add(model);
-            }
-            if (! this.controlViews[key]) {
-                var view = new View({
-                    model: model
-                });
-                view.on('highlight', this.selectControl, this);
-                controlsDiv.append(view.render().el);
-                this.controlViews[key] = (view);
-            } else {
-                this.controlViews[key].setModel(model);
-                this.controlViews[key].reset();
-            }
-        }, this);
     },
-    selectControl: function(view) {
-        if (this.selectedControl && this.selectedControl !== view) {
+    selectControl: function(container) {
+        if (this.selectedControl && this.selectedControl !== container) {
             this.selectedControl.unhighlight();
         }
-        this.selectedControl = view;
+        this.selectedControl = container;
     },
     addControl: function() {
         this.$el.modal('hide');
 
         var control = new Reactor.Model.Control({
-            statName: this.selectedControl.model.get('name'),
-            view: this.selectedControl.type
+            statName: this.selectedControl.getView().model.get('name'),
+            view: this.selectedControl.getView().type
         });
         reactor.controls.add(control);
         this.trigger('addControl');
@@ -79,7 +89,7 @@ Reactor.View.AddControlModal = Backbone.View.extend({
             }
             // Drawing code goes here
             _.forEach(this.controlViews, function(view) {
-                view.frame();
+                view.getView().frame();
             });
         }, this);
         draw();
@@ -87,6 +97,7 @@ Reactor.View.AddControlModal = Backbone.View.extend({
     closeModal: function() {
         this.runAnimation = false;
         _.forEach(this.controlViews, function(view) {
+            view.getView().remove();
             view.remove();
         }, this);
         this.controlViews = {};
@@ -103,12 +114,16 @@ Reactor.View.Navigation = Backbone.View.extend({
     },
     addControl: function(event) {
         event.preventDefault();
+        reactor.getStatsList(_.bind(function(list) {
+            this.modal.statsList = list;
 
-        this.$el.find('#addControlModal').modal({
-            backdrop: false
-        }).on('shown', _.bind(function() {
-            //$(this).find('#statsList').trigger('change');
-            this.modal.animate();
+            this.$el.find('#addControlModal').modal({
+                backdrop: false
+            }).on('shown', _.bind(function() {
+                //$(this).find('#statsList').trigger('change');
+                this.modal.render();
+                this.modal.animate();
+            }, this));
         }, this));
     },
     render: function() {
