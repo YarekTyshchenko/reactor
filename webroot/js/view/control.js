@@ -3,6 +3,7 @@ Reactor.View.Control = Backbone.View.extend({
     className: 'control',
     width: 130,
     height: 130,
+    data: {},
     initialize: function(options) {
         this.model = options.model || new Reactor.Model.Stat();
         this.control = options.control || new Reactor.Model.Control();

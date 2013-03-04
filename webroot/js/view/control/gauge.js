@@ -7,6 +7,9 @@ Reactor.View.Gauge = Reactor.View.Control.extend({
             w: 130,
             h: 130
     },
+    data: {
+        value: null
+    },
 	render: function() {
 		var paper = Raphael(this.el, this.dim.w, this.dim.h);
 		

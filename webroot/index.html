@@ -1,8 +1,10 @@
 <html>
 <head>
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+    <link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet" />
+
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
     <script type="text/javascript" src="js/lib/underscore.js"></script>
     <script type="text/javascript" src="js/lib/backbone.js"></script>
     <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
@@ -20,6 +22,9 @@
         }
         body {
             background-image: url('../img/grid.png');
+        }
+        .ui-autocomplete {
+            z-index: 1060;
         }
     </style>
 </head>
@@ -40,6 +45,11 @@
     <div id='content'>
         <div id='dashboard'></div>
 
+        <!-- DataBinding -->
+        <script type='text/template' id='dataBindingTemplate'>
+            <label for='<%= id %>'><%= name %></label>
+            <input id='<%= id %>' class="binding" />
+        </script>
         <!-- ControlContainer -->
         <script type='text/template' id='controlContainerTemplate'>
             <style>
@@ -111,7 +121,6 @@
                 </div>
                 <div id='controlOptions'>
                     <h2 class='name'></h3>
-                    <p class='description'></p>
                     <h3>Data bindings</h3>
                     <div class='dataBindings'></div>
                 </div>

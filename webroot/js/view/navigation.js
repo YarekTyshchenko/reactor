@@ -1,3 +1,23 @@
+Reactor.View.DataBinding = Backbone.View.extend({
+    template: _.template($('#dataBindingTemplate').html()),
+    className: 'dataBinding',
+    name: null,
+    data: [],
+    initialize: function(options) {
+        this.name = options.name;
+        this.data = options.data;
+    },
+    render: function() {
+        console.log(this);
+        this.$el.html(this.template({name:this.name, id:this.cid}));
+        this.$el.find('input.binding').autocomplete({
+            source: this.data,
+            delay: 0,
+            minLength: 0
+        });
+        return this;
+    }
+});
 Reactor.View.ControlContainer = Backbone.View.extend({
     template: _.template($('#controlContainerTemplate').html()),
     className: 'controlContainer',
@@ -46,7 +66,7 @@ Reactor.View.AddControlModal = Backbone.View.extend({
         this.stats.bind('add', this.render, this);
     },
     render: function() {
-        this.$el.html(this.template({stats:this.statsList}));
+        this.$el.html(this.template({}));
         var controlsDiv = this.$el.find('#controlList').html('');
         _.forEach(reactor.availableViews, function(View, key) {
             var view = new View({});
@@ -70,6 +90,23 @@ Reactor.View.AddControlModal = Backbone.View.extend({
             this.selectedControl.unhighlight();
         }
         this.selectedControl = container;
+        this.populateOptions(container.getView());
+    },
+    populateOptions: function(view) {
+        var options = $('#controlOptions');
+        options.find('.name').text(view.type);
+        console.log(this.statsList);
+        // Clear data bindings
+        var dataBindings = options.find('.dataBindings').html('');
+        _.forEach(view.data, function(value, name) {
+            // Render data binding view
+            var binding = new Reactor.View.DataBinding({
+                name: name,
+                data: Object.keys(this.statsList)
+            });
+            dataBindings.append(binding.render().el);
+        }, this);
+
     },
     addControl: function() {
         this.$el.modal('hide');
