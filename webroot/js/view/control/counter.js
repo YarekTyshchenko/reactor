@@ -1,7 +1,6 @@
 Reactor.View.Counter = Reactor.View.Control.extend({
     type: 'Flow Rate Meter',
     scale: 0.18,
-    value: 0,
     degrees: 0,
     line: null,
     dim: {
@@ -58,14 +57,13 @@ Reactor.View.Counter = Reactor.View.Control.extend({
         this.initRender();
         return this;
     },
-    refresh: function() {
-        this.value = this.model.get('value');
-    },
     frame: function() {
-        this.degrees = (this.value*this.scale + this.degrees);
+        this.degrees = (this.data.rate*this.scale + this.degrees);
         this.line.transform('r'+this.degrees%360+","+this.dim.w/2+","+this.dim.h/2);
         this.littleHand.transform('r'+(this.degrees/100)%360+','+(this.dim.w/2+30)+','+(this.dim.h/2-30));
-        this.valueLabel.attr('text', $.trim(this.value));
-        this.nameLabel.attr('text', this.model.get('name').substring(0,25));
+        this.valueLabel.attr('text', $.trim(this.data.rate));
+        if (this.control.get('bindings').rate) {
+            this.nameLabel.attr('text', this.control.get('bindings').rate.substring(0,25));
+        }
     }
 })

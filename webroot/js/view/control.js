@@ -1,24 +1,30 @@
 Reactor.View.Control = Backbone.View.extend({
-    value: null,
     className: 'control',
     width: 130,
     height: 130,
     data: {},
     initialize: function(options) {
-        this.model = options.model || new Reactor.Model.Stat();
+        this.models = options.models || {};
         this.control = options.control || new Reactor.Model.Control();
         this.control.bind('change', this.updatePosition, this);
-        this.model.bind('change', this.refresh, this);
-        _.bindAll(this);
+        _.forEach(this.models, function(model) {
+            model.bind('change', this.refreshData, this);
+        }, this);
     },
-    setModel: function(model) {
-        this.model.unbind('change', this.refresh, this);
-        this.model = model;
-        this.model.bind('change', this.refresh, this);
+    // setModel: function(binding, model) {
+    //     this.models[binding].unbind('change', this.refreshData, this);
+    //     this.models[binding] = model;
+    //     this.models[binding].bind('change', this.refreshData, this);
+    //     this.refreshData();
+    // },
+    refreshData: function() {
+        _.forEach(this.models, function(stat, name) {
+            this.data[name] = stat.get('value');
+        }, this);
         this.refresh();
     },
     refresh: function() {
-        this.value = this.model.get('value');
+
     },
     frame: function() {
 

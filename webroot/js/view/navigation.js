@@ -5,10 +5,9 @@ Reactor.View.DataBinding = Backbone.View.extend({
     data: [],
     initialize: function(options) {
         this.name = options.name;
-        this.data = options.data;
+        this.data = options.autocomplete;
     },
     render: function() {
-        console.log(this);
         this.$el.html(this.template({name:this.name, id:this.cid}));
         this.$el.find('input.binding').autocomplete({
             source: this.data,
@@ -82,9 +81,6 @@ Reactor.View.AddControlModal = Backbone.View.extend({
 
         return this;
     },
-    selectStat: function(e) {
-        var statname = $(e.target).val();
-    },
     selectControl: function(container) {
         if (this.selectedControl && this.selectedControl !== container) {
             this.selectedControl.unhighlight();
@@ -95,25 +91,27 @@ Reactor.View.AddControlModal = Backbone.View.extend({
     populateOptions: function(view) {
         var options = $('#controlOptions');
         options.find('.name').text(view.type);
-        console.log(this.statsList);
         // Clear data bindings
         var dataBindings = options.find('.dataBindings').html('');
         _.forEach(view.data, function(value, name) {
             // Render data binding view
             var binding = new Reactor.View.DataBinding({
                 name: name,
-                data: Object.keys(this.statsList)
+                autocomplete: Object.keys(this.statsList)
             });
             dataBindings.append(binding.render().el);
         }, this);
-
     },
     addControl: function() {
+        var bindings = {};
+        $('.dataBindings input').each(function(key, input) {
+            bindings[$(input).data('name')] = $(input).val();
+        });
         this.$el.modal('hide');
 
         var control = new Reactor.Model.Control({
-            statName: this.selectedControl.getView().model.get('name'),
-            view: this.selectedControl.getView().type
+            bindings: bindings,
+            view: this.selectedControl.getView().type,
         });
         reactor.controls.add(control);
         this.trigger('addControl');

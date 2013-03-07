@@ -3,7 +3,7 @@ Reactor.Model.Control = Backbone.Model.extend({
         id: null,
         // Default view
         view: 'Flow Rate Meter',
-        statName: '',
+        bindings: {},
         position: {
             x: null,
             y: null

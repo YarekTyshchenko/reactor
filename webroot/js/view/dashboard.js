@@ -9,6 +9,7 @@ Reactor.View.Dashboard = Backbone.View.extend({
         this.controls.bind('add', this.addControl, this);
     },
     render: function() {
+        this.$el = $('#dashboard');
         this.controls.forEach(function(control) {
             this.addControl(control);
         }, this);
@@ -16,29 +17,40 @@ Reactor.View.Dashboard = Backbone.View.extend({
         this.animate();
         return this;
     },
+    getStatsForBindings: function(bindings) {
+        var models = {};
+        _.forEach(bindings, function(stat, name) {
+            var statModel = this.stats.get(stat);
+            if (!statModel) {
+                statModel = new Reactor.Model.Stat({
+                    name: stat
+                });
+            }
+            this.stats.add(statModel);
+            models[name] = statModel;
+        }, this);
+        return models;
+    },
     addControl: function(control) {
-        var name = control.get('statName');
         var View = control.getView();
         this.controlViews[control.cid] = new View({
-            model: this.stats.get(name),
+            models: this.getStatsForBindings(control.get('bindings')),
             control: control,
-            id: name
+            id: control.get('id')
         });
         this.controlViews[control.cid].on('changeControl', _.bind(function(){
             this.trigger('changeControl');
         }, this));
-        this.$el = $('#dashboard');
         this.$el.append(this.controlViews[control.cid].render().el);
     },
     animate: function() {
-        var controlViews = this.controlViews;
-        var draw = function() {
+        var draw = _.bind(function() {
             requestAnimFrame(draw);
             // Drawing code goes here
-            _.forEach(controlViews, function(view) {
+            _.forEach(this.controlViews, function(view) {
                 view.frame();
             });
-        }
+        }, this);
         draw();
     }
 })

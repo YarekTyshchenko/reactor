@@ -47,7 +47,6 @@ var reactor = {
     exchangeConfig: function() {
         // Exchange config
         this.settings.config.controls = this.controls.toJSON();
-        var settings = this.settings;
         this.socket.emit('setConfig', this.settings);
     },
     updateConfig: function(settings) {
@@ -70,7 +69,7 @@ var reactor = {
     },
     getStatsList: function(callback) {
         this.socket.emit('getStatsList', function (list) {
-          callback(list);
+            callback(list);
         });
     }
 };

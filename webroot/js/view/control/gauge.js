@@ -1,6 +1,5 @@
 Reactor.View.Gauge = Reactor.View.Control.extend({
 	type: 'Gauge',
-	value: 0,
 	max: 1,
 	min: 0,
 	dim: {
@@ -36,23 +35,22 @@ Reactor.View.Gauge = Reactor.View.Control.extend({
 		return this;
 	},
 	refresh: function() {
-		this.value = this.model.get('value');
-		if (this.value > this.max) {
-			this.max = this.value;
+		if (this.data.value > this.max) {
+			this.max = this.data.value;
 		}
 		//this.value = 50;
 		// -50 to 50
 		// 0 to 1000
-		var value = ((100/this.max) * this.value) - 50;
+		var value = ((100/this.max) * this.data.value) - 50;
 		//console.log(value);
 		this.needle.transform('r'+(value)+' '+this.dim.w/2+' 100');
 
-		this.valueLabel.attr('text', $.trim(this.value));
-        this.nameLabel.attr('text', this.model.get('name').substring(0,25));
+		this.valueLabel.attr('text', $.trim(this.data.value));
+        this.nameLabel.attr('text', this.models['value'].get('name').substring(0,25));
 	},
 	reset: function() {
 		this.max = 1;
 		this.min = 0;
-		this.value = 0;
+		this.data.value = 0;
 	}
 })

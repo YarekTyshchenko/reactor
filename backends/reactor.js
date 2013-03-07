@@ -76,9 +76,12 @@ ReactorBackend.prototype.flush = function(timestamp, metrics) {
     // Only send stats that we have controls for
     var out = {};
     settings.config.controls.forEach(function(control) {
-        if (! out[control.statName]) {
-            out[control.statName] = statlist[control.statName];
-        }
+        Object.keys(control.bindings).forEach(function(name) {
+            var statName = control.bindings[name];
+            if (! out[statName] && statlist[statName]) {
+               out[statName] = statlist[statName];
+            }
+        });
     });
     io.sockets.emit('out', {list:out});
 };
