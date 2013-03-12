@@ -7,7 +7,7 @@ Reactor.View.Control = Backbone.View.extend({
         this.bindings = options.bindings;
         this.control = options.control || new Reactor.Model.Control();
         this.control.bind('change', this.updatePosition, this);
-        this.data = {};
+        this.data = _.extend({}, this.data);
         _.forEach(this.getModelsByBinding(this.bindings), function(model, name) {
             model.bind('change', function(model) {
                 this.refreshData(model, name);
