@@ -17,31 +17,18 @@ Reactor.View.Dashboard = Backbone.View.extend({
         this.animate();
         return this;
     },
-    getStatsForBindings: function(bindings) {
-        var models = {};
-        _.forEach(bindings, function(stat, name) {
-            var statModel = this.stats.get(stat);
-            if (!statModel) {
-                statModel = new Reactor.Model.Stat({
-                    name: stat
-                });
-            }
-            this.stats.add(statModel);
-            models[name] = statModel;
-        }, this);
-        return models;
-    },
     addControl: function(control) {
         var View = control.getView();
-        this.controlViews[control.cid] = new View({
-            models: this.getStatsForBindings(control.get('bindings')),
+        var view = new View({
+            bindings: control.get('bindings'),
             control: control,
             id: control.get('id')
         });
-        this.controlViews[control.cid].on('changeControl', _.bind(function(){
+        view.on('changeControl', _.bind(function(){
             this.trigger('changeControl');
         }, this));
-        this.$el.append(this.controlViews[control.cid].render().el);
+        this.controlViews[control.cid] = view;
+        this.$el.append(view.render().el);
     },
     animate: function() {
         var draw = _.bind(function() {

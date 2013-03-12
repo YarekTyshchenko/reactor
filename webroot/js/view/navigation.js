@@ -113,6 +113,7 @@ Reactor.View.AddControlModal = Backbone.View.extend({
             bindings: bindings,
             view: this.selectedControl.getView().type,
         });
+
         reactor.controls.add(control);
         this.trigger('addControl');
     },

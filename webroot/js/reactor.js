@@ -1,8 +1,10 @@
 var reactor = {
     availableViews: {
-        'Flow Rate Meter': Reactor.View.Counter,
-        'Digital Display': Reactor.View.Display,
-        'Gauge': Reactor.View.Gauge
+        //'Flow Rate Meter': Reactor.View.Counter,
+        //'Digital Display': Reactor.View.Display,
+        //'Gauge': Reactor.View.Gauge
+        'Pipe': Reactor.View.Pipe,
+        'Cistern': Reactor.View.Cistern
     },
     settings: {
         config: {
@@ -52,11 +54,11 @@ var reactor = {
     updateConfig: function(settings) {
         var controls = settings.config.controls;
         _.forEach(controls, function(controlSettings){
-            if (! this.stats.get(controlSettings.statName)) {
-                this.stats.add(new Reactor.Model.Stat({
-                   name: controlSettings.statName
-                }));
-            }
+            // if (! this.stats.get(controlSettings.statName)) {
+            //     this.stats.add(new Reactor.Model.Stat({
+            //        name: controlSettings.statName
+            //     }));
+            // }
             if (! this.controls.get(controlSettings.id)) {
                 var control = new Reactor.Model.Control(controlSettings);
                 reactor.controls.add(control);
