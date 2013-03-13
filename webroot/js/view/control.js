@@ -1,7 +1,7 @@
 Reactor.View.Control = Backbone.View.extend({
     className: 'control',
-    width: 130,
-    height: 130,
+    //width: 130,
+    //height: 130,
     data: null,
     initialize: function(options) {
         this.bindings = options.bindings;
@@ -61,8 +61,8 @@ Reactor.View.Control = Backbone.View.extend({
                 this.draggableStop(event, ui);
             }, this)
         });
-        this.$el.css('width', this.width);
-        this.$el.css('height', this.height);
+        //this.$el.css('width', this.width);
+        //this.$el.css('height', this.height);
         this.updatePosition();
     },
     updatePosition: function() {

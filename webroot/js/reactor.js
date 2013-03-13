@@ -4,7 +4,8 @@ var reactor = {
         //'Digital Display': Reactor.View.Display,
         //'Gauge': Reactor.View.Gauge
         'Pipe': Reactor.View.Pipe,
-        'Cistern': Reactor.View.Cistern
+        'Cistern': Reactor.View.Cistern,
+        'Dots': Reactor.View.Dots
     },
     settings: {
         config: {
