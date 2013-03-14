@@ -1,7 +1,7 @@
 Reactor.View.Dots = Reactor.View.Control.extend({
     type: 'Dots',
     data: {
-        value: 1,
+        value: 10,
     },
     dots: null,
     _arrangeDots: function(value) {

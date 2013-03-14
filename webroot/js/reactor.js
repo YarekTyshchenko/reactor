@@ -5,7 +5,9 @@ var reactor = {
         //'Gauge': Reactor.View.Gauge
         'Pipe': Reactor.View.Pipe,
         'Cistern': Reactor.View.Cistern,
-        'Dots': Reactor.View.Dots
+        'Dots': Reactor.View.Dots,
+        'Flare': Reactor.View.Flare,
+        'Hopper': Reactor.View.Hopper
     },
     settings: {
         config: {

@@ -50,3 +50,12 @@ h3 {
     font-size: 15pt;
     margin: 0;
 }
+.control {
+    float: left;
+}
+body {
+    background-image: url('../img/grid.png');
+}
+.ui-autocomplete {
+    z-index: 1060;
+}

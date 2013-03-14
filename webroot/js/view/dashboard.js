@@ -29,6 +29,7 @@ Reactor.View.Dashboard = Backbone.View.extend({
         }, this));
         this.controlViews[control.cid] = view;
         this.$el.append(view.render().el);
+        view.finishRender();
     },
     animate: function() {
         var draw = _.bind(function() {

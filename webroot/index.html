@@ -9,25 +9,16 @@
     <script type="text/javascript" src="js/lib/underscore.js"></script>
     <script type="text/javascript" src="js/lib/backbone.js"></script>
     <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src='js/lib/socket.io.min.js'></script>
     <script type="text/javascript" src="js/lib/raphael.2.1.0.min.js"></script>
     <script type="text/javascript" src="js/lib/justgage.1.0.1.min.js"></script>
-    <script type="text/javascript" src='js/lib/socket.io.min.js'></script>
+    <script type="text/javascript" src="js/lib/segment-display.js"></script>
+    <script type="text/javascript" src="js/lib/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/lib/Box2d.min.js"></script>
 
     <!--[if lt IE 9]>
         <script type="text/javascript" src="js/lib/excanvas.js"></script>
     <![endif]-->
-    <script type="text/javascript" src="js/lib/segment-display.js"></script>
-    <style>
-        .control {
-            float: left;
-        }
-        body {
-            background-image: url('../img/grid.png');
-        }
-        .ui-autocomplete {
-            z-index: 1060;
-        }
-    </style>
 </head>
 <body>
     <div id='navigation' class="navbar navbar-inverse">
@@ -85,6 +76,8 @@
     <script src='js/view/control/pipe.js'></script>
     <script src='js/view/control/cistern.js'></script>
     <script src='js/view/control/dots.js'></script>
+    <script src='js/view/control/flare.js'></script>
+    <script src='js/view/control/hopper.js'></script>
     <script src='js/model/control.js'></script>
     <script src='js/model/stat.js'></script>
     <script src='js/collection/controls.js'></script>

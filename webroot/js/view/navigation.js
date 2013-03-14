@@ -157,7 +157,7 @@ Reactor.View.Navigation = Backbone.View.extend({
                 backdrop: false
             }).on('shown', _.bind(function() {
                 //$(this).find('#statsList').trigger('change');
-                this.modal.render();
+                //this.modal.render();
                 this.modal.animate();
             }, this));
         }, this));

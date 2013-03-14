@@ -65,6 +65,9 @@ Reactor.View.Control = Backbone.View.extend({
         //this.$el.css('height', this.height);
         this.updatePosition();
     },
+    finishRender: function() {
+
+    },
     updatePosition: function() {
         this.$el.css('left', this.control.get('position').x);
         this.$el.css('top', this.control.get('position').y);
